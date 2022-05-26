@@ -6,11 +6,10 @@ import com.yunusbedir.userlist.domain.UiState
 import com.yunusbedir.userlist.domain.callback.RepositoryCallBack
 import com.yunusbedir.userlist.domain.repository.UserListRepository
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
-class FetchUserListUseCase @Inject constructor(
+class FetchNextUserListUseCase @Inject constructor(
     private val userListRepository: UserListRepository
 ) : BaseUseCase<Int>,
     RepositoryCallBack<FetchResponse, FetchError> {
@@ -20,7 +19,7 @@ class FetchUserListUseCase @Inject constructor(
 
     override suspend fun invoke(params: Int) {
         _sharedFlow.value = UiState.Loading
-        userListRepository.fetchUserList(next = params.toString(), this@FetchUserListUseCase)
+        userListRepository.fetchUserList(next = params.toString(), this@FetchNextUserListUseCase)
     }
 
     override fun success(result: FetchResponse) {
