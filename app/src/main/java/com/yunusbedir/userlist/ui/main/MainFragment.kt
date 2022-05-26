@@ -68,9 +68,11 @@ class MainFragment : Fragment(),
 
     private fun progressVisibility(isVisible: Boolean) {
         binding.mainSwipeRefreshLayout.isRefreshing = isVisible
+        binding.mainBottomProgressBar.visibility = if (isVisible.not()) View.GONE else View.VISIBLE
     }
 
     override fun onRefresh() {
+        binding.mainBottomProgressBar.visibility = View.VISIBLE
         mainViewModel.nextUserList(userListAdapter.currentList)
     }
 
