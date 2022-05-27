@@ -17,28 +17,25 @@ class MainViewModel @Inject constructor(
     private val fetchUserListUseCase: FetchUserListUseCase
 ) : ViewModel() {
 
-    private val _userListLiveData = MutableSharedFlow<UiState>()
-    val userListLiveData: SharedFlow<UiState> = _userListLiveData
+    private val _userListSharedFlow = MutableSharedFlow<UiState>()
+    val userListSharedFlow: SharedFlow<UiState> = _userListSharedFlow
 
     private var currentList: List<Person>? = null
     private var nextUserList: Int = 0
 
     init {
         viewModelScope.launch {
-            launch {
-
-                fetchUserListUseCase.sharedFlow.collect {
+                fetchUserListUseCase.resultStateFlow.collect {
                     if (it is UiState.Success<*>) {
                         nextUserList = ((it.data as FetchResponse).next ?: "0").toInt()
                         val userList = ArrayList<Person>()
                         currentList?.let { it1 -> userList.addAll(it1) }
                         userList.addAll(it.data.people)
-                        _userListLiveData.emit(UiState.Success(userList))
+                        _userListSharedFlow.emit(UiState.Success(userList))
                     } else {
-                        _userListLiveData.emit(it)
+                        _userListSharedFlow.emit(it)
                     }
                 }
-            }
         }
     }
 

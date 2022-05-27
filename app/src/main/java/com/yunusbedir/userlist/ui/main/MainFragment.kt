@@ -1,12 +1,9 @@
 package com.yunusbedir.userlist.ui.main
 
-import com.yunusbedir.userlist.data.FetchResponse
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -25,7 +22,7 @@ class MainFragment : Fragment(),
 
     private val mainViewModel by viewModels<MainViewModel>()
     private val userListAdapter = UserListAdapter(this)
-    private var count = 0
+
     private lateinit var binding: FragmentMainBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +45,7 @@ class MainFragment : Fragment(),
 
     private fun initObserver() {
         lifecycleScope.launch {
-            mainViewModel.userListLiveData
+            mainViewModel.userListSharedFlow
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
                     when (it) {

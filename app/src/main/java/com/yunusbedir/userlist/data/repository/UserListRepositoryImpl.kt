@@ -16,10 +16,14 @@ class UserListRepositoryImpl @Inject constructor(
         repositoryCallBack: RepositoryCallBack<FetchResponse, FetchError>
     ) {
         dataSource.fetch(next) { data, error ->
-            if (data != null)
-                repositoryCallBack.success(data)
-            else
+            if (data != null) {
+                if (data.people.isNullOrEmpty())
+                    repositoryCallBack.failure(FetchError(errorDescription = "Can not found user list. Please try again!"))
+                else
+                    repositoryCallBack.success(data)
+            } else {
                 error?.let { repositoryCallBack.failure(it) }
+            }
         }
     }
 
