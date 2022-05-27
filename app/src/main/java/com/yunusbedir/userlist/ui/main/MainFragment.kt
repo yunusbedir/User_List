@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.yunusbedir.userlist.data.Person
 import com.yunusbedir.userlist.databinding.FragmentMainBinding
 import com.yunusbedir.userlist.domain.UiState
@@ -23,7 +25,7 @@ class MainFragment : Fragment(),
 
     private val mainViewModel by viewModels<MainViewModel>()
     private val userListAdapter = UserListAdapter(this)
-
+    private var count = 0
     private lateinit var binding: FragmentMainBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,7 +59,7 @@ class MainFragment : Fragment(),
                             progressVisibility(false)
                         }
                         is UiState.Fail -> {
-                            Toast.makeText(requireContext(), it.failureMessage, Toast.LENGTH_LONG)
+                            Snackbar.make(binding.root, it.failureMessage, Snackbar.LENGTH_LONG)
                                 .show()
                             progressVisibility(false)
                         }
