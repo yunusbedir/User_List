@@ -14,23 +14,23 @@ class FetchUserListUseCase @Inject constructor(
 ) : BaseUseCase<Int?>,
     RepositoryCallBack<FetchResponse, FetchError> {
 
-    private val _sharedFlow = MutableStateFlow<UiState>(UiState.Loading)
-    val sharedFlow: StateFlow<UiState> = _sharedFlow
+    private val _resultStateFlow = MutableStateFlow<UiState>(UiState.Loading)
+    val resultStateFlow: StateFlow<UiState> = _resultStateFlow
 
     override suspend fun invoke(params: Int?) {
-        _sharedFlow.value = UiState.Loading
+        _resultStateFlow.value = UiState.Loading
         userListRepository.fetchUserList(next = params?.toString(), this@FetchUserListUseCase)
     }
 
     override fun success(result: FetchResponse) {
         CoroutineScope(Dispatchers.IO).launch {
-            _sharedFlow.value = UiState.Success(result)
+            _resultStateFlow.value = UiState.Success(result)
         }
     }
 
     override fun failure(error: FetchError) {
         CoroutineScope(Dispatchers.IO).launch {
-            _sharedFlow.value = UiState.Fail(error.errorDescription)
+            _resultStateFlow.value = UiState.Fail(error.errorDescription)
         }
     }
 }
